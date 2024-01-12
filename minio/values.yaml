@@ -1,0 +1,17 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: minio
+  ENV:
+    MINIO_ACCESS_KEY: "YourAccessKey"
+    MINIO_SECRET_KEY: "YourSecretKey-123456"
+  IMAGE:
+    NAME: dimaskiddo/debian:minio-1.0
+  RESOURCES:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 5Gi

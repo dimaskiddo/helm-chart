@@ -1,0 +1,20 @@
+{{- if eq .Values.STATUS "present" }}
+  {{- if .Values.SERVICE }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.SERVICE.NAME }}
+  namespace: {{ .Values.NAMESPACE }}
+spec:
+  type: "ClusterIP"
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+      name: tcp-9000
+  selector: 
+      app: {{ .Values.SERVICE.NAME }} 
+  {{- end }}
+{{- else }}
+# Delete Service
+{{- end }}

@@ -31,7 +31,7 @@ spec:
         image: {{ .Values.SERVICE.IMAGE.NAME }}
         imagePullPolicy: Always
         ports:
-        - containerPort: 6379
+        - containerPort: 9000
           protocol: TCP
         {{- if .Values.SERVICE.ENV }}
         envFrom:
@@ -69,17 +69,17 @@ spec:
         livenessProbe:
           initialDelaySeconds: 10
           tcpSocket:
-            port: 6379
+            port: 9000
           timeoutSeconds: 1
         readinessProbe:
           initialDelaySeconds: 5
           tcpSocket:
-            port: 6379
+            port: 9000
           timeoutSeconds: 1
         {{- if .Values.SERVICE.STORAGE }}
         volumeMounts:
-          - name: redis-data
-            mountPath: /var/lib/redis/data
+          - name: minio-data
+            mountPath: /data/minio
             readOnly: false
         {{- end }}
       dnsPolicy: ClusterFirst
@@ -93,7 +93,7 @@ spec:
       schedulerName: default-scheduler
       {{- if .Values.SERVICE.STORAGE }}
       volumes:
-        - name: redis-data
+        - name: minio-data
           persistentVolumeClaim:
             claimName: {{ .Values.SERVICE.NAME }}
       {{- end }}

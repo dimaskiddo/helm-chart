@@ -1,0 +1,19 @@
+{{- if eq .Values.STATUS "present" }}
+  {{- if .Values.SERVICE }}
+    {{- if .Values.SERVICE.STORAGE }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.SERVICE.NAME }}
+  namespace: {{ .Values.NAMESPACE }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.SERVICE.STORAGE.CAPACITY }}
+    {{- end }}
+  {{- end }}
+{{- else }}
+# Delete PVC
+{{- end }}
