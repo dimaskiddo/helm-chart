@@ -9,7 +9,7 @@ SERVICE:
     MONGODB_DATABASE: "db"
   IMAGE:
     NAME: dimaskiddo/debian:mongodb-4.4
-  RESOURCE:
+  RESOURCES:
     LIMITS:
       CPU: 1
       MEMORY: 512Mi

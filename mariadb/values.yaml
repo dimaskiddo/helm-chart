@@ -9,7 +9,7 @@ SERVICE:
     MYSQL_DATABASE: "db"
   IMAGE:
     NAME: dimaskiddo/debian:mariadb-10.6
-  RESOURCE:
+  RESOURCES:
     LIMITS:
       CPU: 1
       MEMORY: 512Mi

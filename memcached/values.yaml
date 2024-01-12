@@ -4,7 +4,7 @@ SERVICE:
   NAME: memcached
   IMAGE:
     NAME: dimaskiddo/alpine:memcached-1.6
-  RESOURCE:
+  RESOURCES:
     LIMITS:
       CPU: 1
       MEMORY: 256Mi

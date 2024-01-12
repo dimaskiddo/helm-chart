@@ -7,7 +7,7 @@ SERVICE:
   IMAGE:
     NAME: my-image/service-name:latest
     SECRET: service-registry
-  RESOURCE:
+  RESOURCES:
     REPLICAS: 1
     LIMITS:
       CPU: 100m

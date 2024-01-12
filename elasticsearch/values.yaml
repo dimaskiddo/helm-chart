@@ -6,7 +6,7 @@ SERVICE:
     ES_PASSWORD: "123456"
   IMAGE:
     NAME: dimaskiddo/alpine:elasticsearch-7.16
-  RESOURCE:
+  RESOURCES:
     LIMITS:
       CPU: 1
       MEMORY: 512Mi

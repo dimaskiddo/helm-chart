@@ -9,7 +9,7 @@ SERVICE:
     POSTGRESQL_DATABASE: "db"
   IMAGE:
     NAME: dimaskiddo/debian:postgresql-12
-  RESOURCE:
+  RESOURCES:
     LIMITS:
       CPU: 1
       MEMORY: 512Mi

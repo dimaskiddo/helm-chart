@@ -4,7 +4,7 @@ SERVICE:
   NAME: kafka
   IMAGE:
     NAME: dimaskiddo/alpine:kafka-2.8
-  RESOURCE:
+  RESOURCES:
     LIMITS:
       CPU: 1
       MEMORY: 512Mi

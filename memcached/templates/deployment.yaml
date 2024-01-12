@@ -38,32 +38,31 @@ spec:
         - secretRef:
             name: {{ .Values.SERVICE.NAME }}-env
         {{- end }}
-        {{- if .Values.SERVICE.RESOURCE }}
+        {{- if .Values.SERVICE.RESOURCES }}
         resources:
-          {{- if .Values.SERVICE.RESOURCE.REQUEST }}
           requests:
-            {{- if .Values.SERVICE.RESOURCE.REQUEST.CPU }}
-            cpu: {{ .Values.SERVICE.RESOURCE.REQUEST.CPU }}
+          {{- if .Values.SERVICE.RESOURCES.REQUESTS }}
+            {{- if .Values.SERVICE.RESOURCES.REQUESTS.CPU }}
+            cpu: {{ .Values.SERVICE.RESOURCES.REQUESTS.CPU }}
             {{- end }}
-            {{- if .Values.SERVICE.RESOURCE.REQUEST.MEMORY }}
-            memory: {{ .Values.SERVICE.RESOURCE.REQUEST.MEMORY }}
+            {{- if .Values.SERVICE.RESOURCES.REQUESTS.MEMORY }}
+            memory: {{ .Values.SERVICE.RESOURCES.REQUESTS.MEMORY }}
             {{- end }}
           {{- else }}
-          requests:
-            {{- if .Values.SERVICE.RESOURCE.LIMIT.CPU }}
-            cpu: {{ .Values.SERVICE.RESOURCE.LIMIT.CPU }}
+            {{- if .Values.SERVICE.RESOURCES.LIMITS.CPU }}
+            cpu: {{ .Values.SERVICE.RESOURCES.LIMITS.CPU }}
             {{- end }}
-            {{- if .Values.SERVICE.RESOURCE.LIMIT.MEMORY }}
-            memory: {{ .Values.SERVICE.RESOURCE.LIMIT.MEMORY }}
+            {{- if .Values.SERVICE.RESOURCES.LIMITS.MEMORY }}
+            memory: {{ .Values.SERVICE.RESOURCES.LIMITS.MEMORY }}
             {{- end }}
           {{- end }}
-          {{- if .Values.SERVICE.RESOURCE.LIMIT }}
+          {{- if .Values.SERVICE.RESOURCES.LIMITS }}
           limits:
-            {{- if .Values.SERVICE.RESOURCE.LIMIT.CPU }}
-            cpu: {{ .Values.SERVICE.RESOURCE.LIMIT.CPU }}
+            {{- if .Values.SERVICE.RESOURCES.LIMITS.CPU }}
+            cpu: {{ .Values.SERVICE.RESOURCES.LIMITS.CPU }}
             {{- end }}
-            {{- if .Values.SERVICE.RESOURCE.LIMIT.MEMORY }}
-            memory: {{ .Values.SERVICE.RESOURCE.LIMIT.MEMORY }}
+            {{- if .Values.SERVICE.RESOURCES.LIMITS.MEMORY }}
+            memory: {{ .Values.SERVICE.RESOURCES.LIMITS.MEMORY }}
             {{- end }}
           {{- end }}
         {{- end }}
@@ -71,18 +70,18 @@ spec:
           initialDelaySeconds: 10
           tcpSocket:
             port: 11211
-              protocol: TCP
           timeoutSeconds: 1
         readinessProbe:
           initialDelaySeconds: 5
           tcpSocket:
             port: 11211
-              protocol: TCP
           timeoutSeconds: 1
       dnsPolicy: ClusterFirst
       {{- if .Values.SERVICE.SELECTOR }}
       nodeSelector:
-         node-role.kubernetes.io/worker: "{{ .Values.SERVICE.SELECTOR.NODE }}"
+        {{- if .Values.SERVICE.SELECTOR.NODE }}
+        node-role.kubernetes.io/worker: "{{ .Values.SERVICE.SELECTOR.NODE }}"
+        {{- end }}
       {{- end }}
       restartPolicy: Always
       schedulerName: default-scheduler
