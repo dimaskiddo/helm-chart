@@ -10,7 +10,7 @@ SERVICE:
     MB_DB_PASS: "123456"
     MB_DB_DBNAME: "metabase"
   IMAGE:
-    NAME: dimaskiddo/alpine:metebase-0.46
+    NAME: dimaskiddo/alpine:metabase-0.46
   RESOURCES:
     LIMITS:
       CPU: 1
