@@ -31,8 +31,15 @@ spec:
         image: {{ .Values.SERVICE.IMAGE.NAME }}
         imagePullPolicy: Always
         ports:
-        - containerPort: 3000
+        - containerPort: 7474
           protocol: TCP
+        - containerPort: 7473
+          protocol: TCP
+        - containerPort: 7687
+          protocol: TCP
+        env:
+        - name: NEO4J_JAVA_OPTS
+          value: "-Xms{{ .Values.SERVICE.RESOURCES.LIMITS.MEMORY }} -Xmx{{ .Values.SERVICE.RESOURCES.LIMITS.MEMORY }}"
         {{- if .Values.SERVICE.ENV }}
         envFrom:
         - secretRef:
@@ -69,22 +76,18 @@ spec:
         livenessProbe:
           initialDelaySeconds: 10
           tcpSocket:
-            port: 3000
+            port: 7474
           timeoutSeconds: 1
         readinessProbe:
           initialDelaySeconds: 5
           tcpSocket:
-            port: 3000
+            port: 7474
           timeoutSeconds: 1
         {{- if .Values.SERVICE.STORAGE }}
-          {{- if .Values.ENV }}
-            {{- if eq .Values.ENV.MB_DB_TYPE "h2" }}
         volumeMounts:
-          - name: metabase-data
-            mountPath: /opt/metabase/data
+          - name: neo4j-data
+            mountPath: /var/lib/neo4j/data
             readOnly: false
-            {{- end }}
-          {{- end }}
         {{- end }}
       dnsPolicy: ClusterFirst
       {{- if .Values.SERVICE.SELECTOR }}
@@ -96,14 +99,10 @@ spec:
       restartPolicy: Always
       schedulerName: default-scheduler
       {{- if .Values.SERVICE.STORAGE }}
-        {{- if .Values.ENV }}
-          {{- if eq .Values.ENV.MB_DB_TYPE "h2" }}
       volumes:
-        - name: metabase-data
+        - name: neo4j-data
           persistentVolumeClaim:
             claimName: {{ .Values.SERVICE.NAME }}
-          {{- end }}
-        {{- end }}
       {{- end }}
   {{- end }}
 {{- else }}

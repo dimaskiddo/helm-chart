@@ -1,0 +1,16 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: metabase
+  ENV:
+    NEO4J_AUTH: neo4j/123456
+  IMAGE:
+    NAME: dimaskiddo/alpine:neo4j-4.4
+  RESOURCES:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 5Gi
