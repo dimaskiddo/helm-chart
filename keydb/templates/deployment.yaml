@@ -81,6 +81,14 @@ spec:
           - name: keydb-data
             mountPath: /var/lib/keydb/data
             readOnly: false
+        {{- else }}
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - /bin/bash
+                - '-c'
+                - keydb-cli -h 127.0.0.1 -a ${REDIS_PASSWORD} config set save "" && keydb-cli -h 127.0.0.1 -a ${REDIS_PASSWORD} config set maxmemory-policy volatile-lru
         {{- end }}
       dnsPolicy: ClusterFirst
       {{- if .Values.SERVICE.SELECTOR }}

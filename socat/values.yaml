@@ -1,0 +1,22 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: socat
+  IMAGE:
+    NAME: dimaskiddo/alpine:socat-1.7
+  CONFIG:
+    - PORT: 9094
+      FORWARD_IP: 127.0.0.1
+      FORWARD_PORT: 9094
+    - PORT: 9095
+      FORWARD_IP: 127.0.0.1
+      FORWARD_PORT: 9095
+    - PORT: 9096
+      FORWARD_IP: 127.0.0.1
+      FORWARD_PORT: 9096
+  RESOURCES:
+    LIMITS:
+      CPU: 200m
+      MEMORY: 128Mi
+  SELECTOR:
+    NODE: ""

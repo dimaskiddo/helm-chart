@@ -81,6 +81,14 @@ spec:
           - name: redis-data
             mountPath: /var/lib/redis/data
             readOnly: false
+        {{- else }}
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - /bin/bash
+                - '-c'
+                - redis-cli -h 127.0.0.1 -a ${REDIS_PASSWORD} config set save "" && redis-cli -h 127.0.0.1 -a ${REDIS_PASSWORD} config set maxmemory-policy volatile-lru
         {{- end }}
       dnsPolicy: ClusterFirst
       {{- if .Values.SERVICE.SELECTOR }}
