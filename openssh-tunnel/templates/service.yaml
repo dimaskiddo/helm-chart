@@ -1,0 +1,27 @@
+{{- if eq .Values.STATUS "present" }}
+  {{- if .Values.SERVICE }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.SERVICE.NAME }}
+  namespace: {{ .Values.NAMESPACE }}
+spec:
+  type: "ClusterIP"
+  ports:
+    {{- if .Values.SERVICE.ENV.SSH_TUNNEL_FORWARD_DST_PORT }}
+    - port: {{ .Values.SERVICE.ENV.SSH_TUNNEL_FORWARD_DST_PORT }}
+      targetPort: {{ .Values.SERVICE.ENV.SSH_TUNNEL_FORWARD_DST_PORT }}
+      protocol: TCP
+      name: tcp-{{ .Values.SERVICE.ENV.SSH_TUNNEL_FORWARD_DST_PORT }}
+    {{- else }}
+    - port: 2222
+      targetPort: 2222
+      protocol: TCP
+      name: tcp-2222
+    {{- end }}
+  selector: 
+      app: {{ .Values.SERVICE.NAME }} 
+  {{- end }}
+{{- else }}
+# Delete Service
+{{- end }}

@@ -1,0 +1,27 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: openssh-tunnel
+  ENV:
+    SSH_TUNNEL_DST_USER: "user"
+    SSH_TUNNEL_DST_HOST: "127.0.0.1"
+    SSH_TUNNEL_DST_PORT: "22"
+    SSH_TUNNEL_FORWARD_SRC_HOST: "127.0.0.10"
+    SSH_TUNNEL_FORWARD_SRC_PORT: "3306"
+    SSH_TUNNEL_FORWARD_DST_PORT: "3306"
+    SSH_KEY_TYPE: "rsa"
+    SSH_KEY_PRIVATE: |-
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEA0Ej7clIEnBti2PQi1zOb39s8Sd473dZjKd3fDMC8KOraZgRu
+      uwsbpItE+G7eurUFGm10CDEVyNxkAXPmhBk3fdpy6YvDqG0Y2g3Cp8ZfC+PLVHEw
+      -----END RSA PRIVATE KEY-----
+    SSH_KEY_PUBLIC: |-
+      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQSPtyUg example@localhost
+  IMAGE:
+    NAME: dimaskiddo/alpine:openssh-8.8
+  RESOURCES:
+    LIMITS:
+      CPU: 1
+      MEMORY: 256Mi
+  SELECTOR:
+    NODE: ""
