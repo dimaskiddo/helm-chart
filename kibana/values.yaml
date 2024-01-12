@@ -1,0 +1,17 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: kibana
+  ENV:
+    SERVER_PUBLICBASEURL: "https://kibana.example.com"
+    ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+    ELASTICSEARCH_USERNAME: "elastic"
+    ELASTICSEARCH_PASSWORD: "123456"
+  IMAGE:
+    NAME: kibana:7.16.3
+  RESOURCE:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""

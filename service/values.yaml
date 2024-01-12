@@ -1,0 +1,16 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: service-name
+  PORT: 9000
+  STRATEGY: rolling
+  IMAGE:
+    NAME: my-image/service-name:latest
+    SECRET: service-registry
+  RESOURCE:
+    REPLICAS: 1
+    LIMITS:
+      CPU: 100m
+      MEMORY: 256Mi
+  SELECTOR:
+    NODE: ""

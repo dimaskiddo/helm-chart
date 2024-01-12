@@ -1,0 +1,102 @@
+{{- if eq .Values.STATUS "present" }}
+  {{- if .Values.SERVICE }}
+    {{- if .Values.OPENSHIFT }}
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+    {{- else }}
+apiVersion: apps/v1
+kind: Deployment
+    {{- end }}
+metadata:
+  name: {{ .Values.SERVICE.NAME }}
+  namespace: {{ .Values.NAMESPACE }}
+  labels:
+    app: {{ .Values.SERVICE.NAME }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.SERVICE.NAME }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.SERVICE.NAME }}
+        date: "{{ now | unixEpoch }}"  
+    spec:
+      containers:
+      - name: {{ .Values.SERVICE.NAME }}
+        image: {{ .Values.SERVICE.IMAGE.NAME }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        {{- if .Values.SERVICE.ENV }}
+        envFrom:
+        - secretRef:
+            name: {{ .Values.SERVICE.NAME }}-env
+        {{- end }}
+        {{- if .Values.SERVICE.RESOURCE }}
+        resources:
+          {{- if .Values.SERVICE.RESOURCE.REQUEST }}
+          requests:
+            {{- if .Values.SERVICE.RESOURCE.REQUEST.CPU }}
+            cpu: {{ .Values.SERVICE.RESOURCE.REQUEST.CPU }}
+            {{- end }}
+            {{- if .Values.SERVICE.RESOURCE.REQUEST.MEMORY }}
+            memory: {{ .Values.SERVICE.RESOURCE.REQUEST.MEMORY }}
+            {{- end }}
+          {{- else }}
+          requests:
+            {{- if .Values.SERVICE.RESOURCE.LIMIT.CPU }}
+            cpu: {{ .Values.SERVICE.RESOURCE.LIMIT.CPU }}
+            {{- end }}
+            {{- if .Values.SERVICE.RESOURCE.LIMIT.MEMORY }}
+            memory: {{ .Values.SERVICE.RESOURCE.LIMIT.MEMORY }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.SERVICE.RESOURCE.LIMIT }}
+          limits:
+            {{- if .Values.SERVICE.RESOURCE.LIMIT.CPU }}
+            cpu: {{ .Values.SERVICE.RESOURCE.LIMIT.CPU }}
+            {{- end }}
+            {{- if .Values.SERVICE.RESOURCE.LIMIT.MEMORY }}
+            memory: {{ .Values.SERVICE.RESOURCE.LIMIT.MEMORY }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+        livenessProbe:
+          initialDelaySeconds: 10
+          tcpSocket:
+            port: 5432
+          timeoutSeconds: 1
+        readinessProbe:
+          initialDelaySeconds: 5
+          tcpSocket:
+            port: 5432
+          timeoutSeconds: 1
+        {{- if .Values.SERVICE.STORAGE }}
+        volumeMounts:
+          - name: mariadb-data
+            mountPath: /var/lib/mysql/data
+            readOnly: false
+        {{- end }}
+      dnsPolicy: ClusterFirst
+      {{- if .Values.SERVICE.SELECTOR }}
+      nodeSelector:
+         node-role.kubernetes.io/worker: "{{ .Values.SERVICE.SELECTOR.NODE }}"
+      {{- end }}
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      {{- if .Values.SERVICE.STORAGE }}
+      volumes:
+        - name: mariadb-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.SERVICE.NAME }}
+      {{- end }}
+  {{- end }}
+{{- else }}
+# Delete Deployment
+{{- end }}

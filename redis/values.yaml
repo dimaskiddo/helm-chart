@@ -1,0 +1,16 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: redis
+  ENV:
+    REDIS_PASSWORD: "123456"
+  IMAGE:
+    NAME: dimaskiddo/alpine:redis-6.2
+  RESOURCE:
+    LIMITS:
+      CPU: 1
+      MEMORY: 256Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 1Gi

@@ -1,0 +1,19 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: mariadb
+  ENV:
+    MYSQL_USER: "user"
+    MYSQL_PASSWORD: "123456"
+    MYSQL_ROOT_PASSWORD: "123456"
+    MYSQL_DATABASE: "db"
+  IMAGE:
+    NAME: dimaskiddo/debian:mariadb-10.6
+  RESOURCE:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 5Gi

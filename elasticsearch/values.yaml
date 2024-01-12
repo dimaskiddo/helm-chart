@@ -1,0 +1,16 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: elasticsearch
+  ENV:
+    ES_PASSWORD: "123456"
+  IMAGE:
+    NAME: dimaskiddo/alpine:elasticsearch-7.16
+  RESOURCE:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 5Gi

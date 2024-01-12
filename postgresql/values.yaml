@@ -1,0 +1,19 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: postgresql
+  ENV:
+    POSTGRESQL_USER: "user"
+    POSTGRESQL_PASSWORD: "123456"
+    POSTGRESQL_ADMIN_PASSWORD: "123456"
+    POSTGRESQL_DATABASE: "db"
+  IMAGE:
+    NAME: dimaskiddo/debian:postgresql-12
+  RESOURCE:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 5Gi

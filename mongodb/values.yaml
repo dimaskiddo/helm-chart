@@ -1,0 +1,19 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: mongodb
+  ENV:
+    MONGODB_USER: "user"
+    MONGODB_PASSWORD: "123456"
+    MONGODB_ADMIN_PASSWORD: "123456"
+    MONGODB_DATABASE: "db"
+  IMAGE:
+    NAME: dimaskiddo/debian:mongodb-4.4
+  RESOURCE:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 5Gi

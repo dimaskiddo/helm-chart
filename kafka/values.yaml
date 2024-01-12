@@ -1,0 +1,14 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: kafka
+  IMAGE:
+    NAME: dimaskiddo/alpine:kafka-2.8
+  RESOURCE:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 10Gi

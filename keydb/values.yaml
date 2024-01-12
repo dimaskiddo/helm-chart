@@ -1,0 +1,16 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: keydb
+  ENV:
+    KEYDB_PASSWORD: "123456"
+  IMAGE:
+    NAME: dimaskiddo/alpine:keydb-6.2
+  RESOURCE:
+    LIMITS:
+      CPU: 1
+      MEMORY: 256Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 1Gi

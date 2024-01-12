@@ -1,0 +1,12 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: memcached
+  IMAGE:
+    NAME: dimaskiddo/alpine:memcached-1.6
+  RESOURCE:
+    LIMITS:
+      CPU: 1
+      MEMORY: 256Mi
+  SELECTOR:
+    NODE: ""
