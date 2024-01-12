@@ -1,0 +1,21 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: metabase
+  ENV:
+    MB_DB_TYPE: "postgres"
+    MB_DB_HOST: "potgressql"
+    MB_DB_PORT: "5432"
+    MB_DB_USER: "metabase"
+    MB_DB_PASS: "123456"
+    MB_DB_DBNAME: "metabase"
+  IMAGE:
+    NAME: dimaskiddo/alpine:metebase-0.46
+  RESOURCES:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""
+  STORAGE:
+    CAPACITY: 1Gi
