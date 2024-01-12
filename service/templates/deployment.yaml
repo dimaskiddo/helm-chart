@@ -102,8 +102,32 @@ spec:
         node-role.kubernetes.io/worker: "{{ .Values.SERVICE.SELECTOR.NODE }}"
         {{- end }}
       {{- end }}
+      {{- if .Values.SERVICE.ALIASES }}
+      hostAliases:
+        {{- range $ips := .Values.SERVICE.ALIASES }}
+        - ip: {{ $ips.IP }}
+          {{- if $ips.HOSTNAMES }}
+          hostnames:
+            {{- range $hosts := $ips.HOSTNAMES }}
+            - {{ $hosts }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
       restartPolicy: Always
       schedulerName: default-scheduler
+    {{- if .Values.OPENSHIFT }}
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames: ["{{ .Values.SERVICE.NAME }}"]
+        from:
+          kind: ImageStreamTag
+          name: "{{ .Values.SERVICE.NAME }}:latest"
+          namespace: "{{ .Values.NAMESPACE }}"
+    {{- end }}
   {{- end }}
 {{- else }}
 # Delete Deployment

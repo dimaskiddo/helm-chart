@@ -14,3 +14,7 @@ SERVICE:
       MEMORY: 256Mi
   SELECTOR:
     NODE: ""
+  ALIASES:
+    - IP: 127.0.0.1
+      HOSTNAMES:
+        - local.example.com
