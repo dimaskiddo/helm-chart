@@ -31,8 +31,13 @@ spec:
         image: {{ .Values.SERVICE.IMAGE.NAME }}
         imagePullPolicy: Always
         ports:
-        - containerPort: 11211
+        - containerPort: 8200
           protocol: TCP
+        {{- if .Values.SERVICE.ENV }}
+        envFrom:
+        - secretRef:
+            name: {{ .Values.SERVICE.NAME }}-env
+        {{- end }}
         {{- if .Values.SERVICE.RESOURCES }}
         resources:
           requests:
@@ -64,12 +69,12 @@ spec:
         livenessProbe:
           initialDelaySeconds: 10
           tcpSocket:
-            port: 11211
+            port: 8200
           timeoutSeconds: 1
         readinessProbe:
           initialDelaySeconds: 5
           tcpSocket:
-            port: 11211
+            port: 8200
           timeoutSeconds: 1
       dnsPolicy: ClusterFirst
       {{- if .Values.SERVICE.SELECTOR }}

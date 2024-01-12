@@ -1,0 +1,17 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: elasticsearch-apm
+  ENV:
+    ES_HOST: "elasticsearch"
+    ES_PORT: "9200"
+    ES_USERNAME: "elastic"
+    ES_PASSWORD: "123456"
+  IMAGE:
+    NAME: dimaskiddo/alpine:apm-7.16
+  RESOURCES:
+    LIMITS:
+      CPU: 1
+      MEMORY: 256Mi
+  SELECTOR:
+    NODE: ""
