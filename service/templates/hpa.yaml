@@ -1,0 +1,43 @@
+{{- if eq .Values.STATUS "present" }}
+  {{- if .Values.SERVICE }}
+    {{- if .Values.SERVICE.HPA }}
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.SERVICE.NAME }}
+  namespace: {{ .Values.NAMESPACE }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.SERVICE.NAME }}
+      {{- if .Values.SERVICE.HPA.MIN_REPLICAS }}
+  minReplicas: {{ .Values.SERVICE.HPA.MIN_REPLICAS }}
+      {{- else }}
+  minReplicas: 1
+      {{- end }}
+      {{- if .Values.SERVICE.HPA.MAX_REPLICAS }}
+  maxReplicas: {{ .Values.SERVICE.HPA.MAX_REPLICAS }}
+      {{- else }}
+  maxReplicas: 3
+      {{- end }}
+      {{- if .Values.SERVICE.HPA.METRICS }}
+  metrics:
+        {{- if .Values.SERVICE.HPA.METRICS.AVG_CPU_PERCENTAGE_UTILIZATION }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.SERVICE.HPA.METRICS.AVG_CPU_PERCENTAGE_UTILIZATION }}
+        {{- end }}
+        {{- if .Values.SERVICE.HPA.METRICS.AVG_MEMORY_PERCENTAGE_UTILIZATION }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.SERVICE.HPA.METRICS.AVG_MEMORY_PERCENTAGE_UTILIZATION }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- else }}
+# Delete HPA
+{{- end }}
