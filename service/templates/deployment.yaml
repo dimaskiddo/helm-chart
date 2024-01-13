@@ -1,6 +1,6 @@
 {{- if eq .Values.STATUS "present" }}
   {{- if .Values.SERVICE }}
-    {{- if .Values.OPENSHIFT }}
+    {{- if eq .Values.OPENSHIFT true }}
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
     {{- else }}
@@ -46,6 +46,13 @@ spec:
         ports:
         - containerPort: {{ .Values.SERVICE.PORT }}
           protocol: TCP
+        {{- if eq .Values.SERVICE.USE_DATADOG true }}
+        env:
+          - name: DD_AGENT_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+        {{- end }}
         {{- if .Values.SERVICE.ENV }}
         envFrom:
         - secretRef:
@@ -116,7 +123,7 @@ spec:
       {{- end }}
       restartPolicy: Always
       schedulerName: default-scheduler
-    {{- if .Values.OPENSHIFT }}
+    {{- if eq .Values.OPENSHIFT true }}
     triggers:
     - type: ConfigChange
     - type: ImageChange

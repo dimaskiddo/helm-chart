@@ -4,6 +4,7 @@ SERVICE:
   NAME: service-name
   PORT: 9000
   STRATEGY: rolling
+  USE_DATADOG: false
   IMAGE:
     NAME: my-image/service-name:latest
     SECRET: service-registry
