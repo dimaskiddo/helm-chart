@@ -1,0 +1,40 @@
+{{- if eq .Values.STATUS "present" }}
+  {{- if .Values.SERVICE }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.SERVICE.NAME }}
+  namespace: {{ .Values.NAMESPACE }}
+spec:
+  type: "ClusterIP"
+  ports:
+    - port: 4369
+      targetPort: 4369
+      protocol: TCP
+      name: tcp-4369
+    - port: 5671
+      targetPort: 5671
+      protocol: TCP
+      name: tcp-5671
+    - port: 5672
+      targetPort: 5672
+      protocol: TCP
+      name: tcp-5672
+    - port: 25672
+      targetPort: 25672
+      protocol: TCP
+      name: tcp-25672
+    - port: 15671
+      targetPort: 15671
+      protocol: TCP
+      name: tcp-15671
+    - port: 15672
+      targetPort: 15672
+      protocol: TCP
+      name: tcp-15672
+  selector: 
+      app: {{ .Values.SERVICE.NAME }} 
+  {{- end }}
+{{- else }}
+# Delete Service
+{{- end }}

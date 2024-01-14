@@ -1,9 +1,12 @@
 STATUS: present
 NAMESPACE: default
 SERVICE:
-  NAME: kafka
+  NAME: rabbitmq
+  ENV:
+    RABBITMQ_CONF_default__user: user
+    RABBITMQ_CONF_default__pass: 123456
   IMAGE:
-    NAME: dimaskiddo/alpine:kafka-2.8
+    NAME: dimaskiddo/alpine:rabbitmq-3.7-management
   RESOURCES:
     LIMITS:
       CPU: 1
