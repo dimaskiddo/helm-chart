@@ -1,0 +1,18 @@
+STATUS: present
+NAMESPACE: default
+SERVICE:
+  NAME: nginx-proxy
+  ENV:
+    NGINX_PROXY_PASS_URL: "http://127.0.0.1:8080"
+    NGINX_BASIC_AUTH_ENABLED: "false"
+    NGINX_BASIC_AUTH_USERNAME: "user"
+    NGINX_BASIC_AUTH_PASSWORD: "123456"
+    NGINX_BASIC_AUTH_REMOVE: "true"
+  IMAGE:
+    NAME: dimaskiddo/alpine:nginx-1.20.2-proxy
+  RESOURCES:
+    LIMITS:
+      CPU: 1
+      MEMORY: 256Mi
+  SELECTOR:
+    NODE: ""
