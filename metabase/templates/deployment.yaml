@@ -105,6 +105,10 @@ spec:
           {{- end }}
         {{- end }}
       {{- end }}
+    {{- if eq .Values.OPENSHIFT true }}
+    triggers:
+    - type: ConfigChange
+    {{- end }}
   {{- end }}
 {{- else }}
 # Delete Deployment

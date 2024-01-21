@@ -91,6 +91,10 @@ spec:
       {{- end }}
       restartPolicy: Always
       schedulerName: default-scheduler
+    {{- if eq .Values.OPENSHIFT true }}
+    triggers:
+    - type: ConfigChange
+    {{- end }}
   {{- end }}
 {{- else }}
 # Delete Deployment
