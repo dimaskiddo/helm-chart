@@ -2,6 +2,7 @@ STATUS: present
 NAMESPACE: default
 SERVICE:
   NAME: keydb
+  OPENSHIFT: false
   ENV:
     KEYDB_PASSWORD: "123456"
   IMAGE:

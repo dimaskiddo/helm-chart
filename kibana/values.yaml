@@ -2,6 +2,7 @@ STATUS: present
 NAMESPACE: default
 SERVICE:
   NAME: kibana
+  OPENSHIFT: false
   ENV:
     SERVER_PUBLICBASEURL: "https://kibana.example.com"
     ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'

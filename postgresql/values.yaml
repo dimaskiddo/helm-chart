@@ -2,6 +2,7 @@ STATUS: present
 NAMESPACE: default
 SERVICE:
   NAME: postgresql
+  OPENSHIFT: false
   ENV:
     POSTGRESQL_USER: "user"
     POSTGRESQL_PASSWORD: "123456"

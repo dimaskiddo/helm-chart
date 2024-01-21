@@ -13,6 +13,7 @@ metadata:
   labels:
     app: {{ .Values.SERVICE.NAME }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    date: "{{ now | unixEpoch }}"
 spec:
   strategy:
     type: Recreate

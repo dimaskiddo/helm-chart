@@ -2,6 +2,7 @@ STATUS: present
 NAMESPACE: default
 SERVICE:
   NAME: mariadb
+  OPENSHIFT: false
   ENV:
     MYSQL_USER: "user"
     MYSQL_PASSWORD: "123456"

@@ -4,9 +4,12 @@ SERVICE:
   NAME: service-name
   PORT: 9000
   STRATEGY: rolling
+  OPENSHIFT: false
   USE_DATADOG: false
+  ENV:
+    FOO: "BAR"
   IMAGE:
-    NAME: my-image/service-name:latest
+    NAME: repository/service-name:latest
     SECRET: service-registry
   RESOURCES:
     REPLICAS: 1

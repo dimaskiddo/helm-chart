@@ -2,6 +2,7 @@ STATUS: present
 NAMESPACE: default
 SERVICE:
   NAME: memcached
+  OPENSHIFT: false
   IMAGE:
     NAME: dimaskiddo/alpine:memcached-1.6
   RESOURCES:

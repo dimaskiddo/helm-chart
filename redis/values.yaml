@@ -2,6 +2,7 @@ STATUS: present
 NAMESPACE: default
 SERVICE:
   NAME: redis
+  OPENSHIFT: false
   ENV:
     REDIS_PASSWORD: "123456"
   IMAGE:

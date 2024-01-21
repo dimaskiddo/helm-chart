@@ -2,6 +2,7 @@ STATUS: present
 NAMESPACE: default
 SERVICE:
   NAME: metabase
+  OPENSHIFT: false
   ENV:
     NEO4J_AUTH: neo4j/123456
   IMAGE:
