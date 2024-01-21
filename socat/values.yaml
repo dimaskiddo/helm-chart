@@ -1,8 +1,8 @@
 STATUS: present
+OPENSHIFT: false
 NAMESPACE: default
 SERVICE:
   NAME: socat
-  OPENSHIFT: false
   IMAGE:
     NAME: dimaskiddo/alpine:socat-1.7
   CONFIG:

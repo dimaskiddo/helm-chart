@@ -1,10 +1,10 @@
 STATUS: present
+OPENSHIFT: false
 NAMESPACE: default
 SERVICE:
   NAME: service-name
   PORT: 9000
   STRATEGY: rolling
-  OPENSHIFT: false
   USE_DATADOG: false
   ENV:
     FOO: "BAR"

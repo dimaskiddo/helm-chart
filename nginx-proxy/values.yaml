@@ -1,8 +1,8 @@
 STATUS: present
+OPENSHIFT: false
 NAMESPACE: default
 SERVICE:
   NAME: nginx-proxy
-  OPENSHIFT: false
   ENV:
     NGINX_PROXY_PASS_URL: "http://127.0.0.1:8080"
     NGINX_BASIC_AUTH_ENABLED: "false"

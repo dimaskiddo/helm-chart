@@ -1,8 +1,8 @@
 STATUS: present
+OPENSHIFT: false
 NAMESPACE: default
 SERVICE:
   NAME: minio
-  OPENSHIFT: false
   ENV:
     MINIO_ACCESS_KEY: "YourAccessKey"
     MINIO_SECRET_KEY: "YourSecretKey-123456"

@@ -1,8 +1,8 @@
 STATUS: present
+OPENSHIFT: false
 NAMESPACE: default
 SERVICE:
   NAME: elasticsearch-apm
-  OPENSHIFT: false
   ENV:
     ES_HOST: "elasticsearch"
     ES_PORT: "9200"

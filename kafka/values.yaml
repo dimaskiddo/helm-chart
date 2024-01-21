@@ -1,8 +1,8 @@
 STATUS: present
+OPENSHIFT: false
 NAMESPACE: default
 SERVICE:
   NAME: kafka
-  OPENSHIFT: false
   IMAGE:
     NAME: dimaskiddo/alpine:kafka-2.8
   RESOURCES:

@@ -1,8 +1,8 @@
 STATUS: present
+OPENSHIFT: false
 NAMESPACE: default
 SERVICE:
   NAME: mongodb
-  OPENSHIFT: false
   ENV:
     MONGODB_USER: "user"
     MONGODB_PASSWORD: "123456"
