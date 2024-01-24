@@ -1,0 +1,120 @@
+{{- if eq .Values.STATUS "present" }}
+  {{- if .Values.SERVICE }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.SERVICE.NAME }}-config
+  namespace: {{ .Values.NAMESPACE }}
+data:
+  logstash.yml: |
+    http.host: "0.0.0.0"
+    path.config: /usr/share/logstash/pipeline
+
+    {{- if .Values.SERVICE.CONFIG }}
+  logstash.conf: |
+    input {
+      {{- if eq .Values.SERVICE.CONFIG.INPUT.TYPE "TCP" }}
+      tcp {
+        port => {{ .Values.SERVICE.CONFIG.INPUT.PORT }}
+      }
+      {{- else if eq .Values.SERVICE.CONFIG.INPUT.TYPE "KAFKA" }}
+      kafka {
+        bootstrap_servers => {{ .Values.SERVICE.CONFIG.INPUT.HOSTS | quote }}
+        topics => [
+        {{- range $index, $topic := .Values.SERVICE.CONFIG.INPUT.TOPICS }}
+          {{- if $index }},{{ end }}
+          {{ $topic.NAME | quote }}
+        {{- end }}
+        ]
+
+        consumer_threads => {{ .Values.SERVICE.CONFIG.INPUT.THREADS }}
+        partition_assignment_strategy => {{ .Values.SERVICE.CONFIG.INPUT.PARTITION_ASSIGNMENT }}
+        group_id => {{ .Values.SERVICE.CONFIG.INPUT.GROUP_ID | quote }}
+
+        max_poll_records => 5000
+        fetch_max_wait_ms => 100
+
+        decorate_events => true
+        codec => json
+      }
+      {{- end }}
+    }
+
+      {{- if .Values.SERVICE.CONFIG.FILTER }}
+    {{ .Values.SERVICE.CONFIG.FILTER }}
+      {{- end }}
+
+    output {
+      {{- if eq .Values.SERVICE.CONFIG.OUTPUT.TYPE "ELASTICSEARCH" }}
+        {{- if eq .Values.SERVICE.CONFIG.INPUT.TYPE "KAFKA" }}
+          {{- range $index, $topic := .Values.SERVICE.CONFIG.INPUT.TOPICS }}
+            {{- if eq $index 0 }}
+      if [@metadata][kafka][topic] == {{ $topic.NAME | quote }} {
+            {{- else }}
+      } else if [@metadata][kafka][topic] == {{ $topic.NAME | quote }} {
+            {{- end }}
+            {{- if eq $.Values.SERVICE.CONFIG.INPUT.KUBERNETES_LOGS true }}
+        if [kubernetes][namespace] {
+          elasticsearch {
+            hosts => {{ $.Values.SERVICE.CONFIG.OUTPUT.HOSTS }}
+            user => "${ELASTICSEARCH_USERNAME}"
+            password => "${ELASTICSEARCH_PASSWORD}"
+
+            http_compression => true
+            manage_template => false
+
+            index => "kube-%{[kubernetes][namespace]}-%{+YYYY.MM.dd}"
+
+            ilm_enabled => true
+          }
+        } else {
+          elasticsearch {
+            hosts => {{ $.Values.SERVICE.CONFIG.OUTPUT.HOSTS }}
+            user => "${ELASTICSEARCH_USERNAME}"
+            password => "${ELASTICSEARCH_PASSWORD}"
+
+            http_compression => true
+            manage_template => false
+
+            index => "syslog-%{+YYYY.MM.dd}"
+
+            ilm_enabled => true
+          }
+        }
+              {{- else }}
+        elasticsearch {
+          hosts => {{ $.Values.SERVICE.CONFIG.OUTPUT.HOSTS }}
+          user => "${ELASTICSEARCH_USERNAME}"
+          password => "${ELASTICSEARCH_PASSWORD}"
+
+          http_compression => true
+          manage_template => false
+
+          index => "{{ $topic.NAME }}-%{+YYYY.MM.dd}"
+
+          ilm_enabled => true
+        }
+              {{- end }}
+            {{- end }}
+          {{- else }}
+        elasticsearch {
+          hosts => {{ $.Values.SERVICE.CONFIG.OUTPUT.HOSTS }}
+          user => "${ELASTICSEARCH_USERNAME}"
+          password => "${ELASTICSEARCH_PASSWORD}"
+
+          http_compression => true
+          manage_template => false
+
+          index => "{{ $.Values.SERVICE.CONFIG.OUTPUT.INDEX }}-%{+YYYY.MM.dd}"
+
+          ilm_enabled => true
+        }
+          {{- end }}
+        {{- end }}
+      }
+    }
+    {{- end }}
+  {{- end }}
+{{- else }}
+# Delete Comfig Map
+{{- end }}

@@ -1,0 +1,124 @@
+{{- if eq .Values.STATUS "present" }}
+  {{- if .Values.SERVICE }}
+    {{- if eq .Values.OPENSHIFT true }}
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+    {{- else }}
+apiVersion: apps/v1
+kind: Deployment
+    {{- end }}
+metadata:
+  name: {{ .Values.SERVICE.NAME }}
+  namespace: {{ .Values.NAMESPACE }}
+  labels:
+    app: {{ .Values.SERVICE.NAME }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    date: "{{ now | unixEpoch }}"
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.SERVICE.NAME }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.SERVICE.NAME }}
+        date: "{{ now | unixEpoch }}"  
+    spec:
+      containers:
+      - name: {{ .Values.SERVICE.NAME }}
+        image: {{ .Values.SERVICE.IMAGE.NAME }}
+        imagePullPolicy: Always
+        {{- if .Values.SERVICE.CONFIG.INPUT -}}
+          {{- if eq .Values.SERVICE.CONFIG.INPUT.TYPE "TCP" }}
+        ports:
+        - containerPort: {{ .Values.SERVICE.CONFIG.INPUT.PORT }}
+          protocol: TCP
+          {{- end }}
+        {{- end }}
+        {{- if .Values.SERVICE.ENV }}
+        envFrom:
+        - secretRef:
+            name: {{ .Values.SERVICE.NAME }}-env
+        {{- end }}
+        {{- if .Values.SERVICE.RESOURCES }}
+        resources:
+          requests:
+          {{- if .Values.SERVICE.RESOURCES.REQUESTS }}
+            {{- if .Values.SERVICE.RESOURCES.REQUESTS.CPU }}
+            cpu: {{ .Values.SERVICE.RESOURCES.REQUESTS.CPU }}
+            {{- end }}
+            {{- if .Values.SERVICE.RESOURCES.REQUESTS.MEMORY }}
+            memory: {{ .Values.SERVICE.RESOURCES.REQUESTS.MEMORY }}
+            {{- end }}
+          {{- else }}
+            {{- if .Values.SERVICE.RESOURCES.LIMITS.CPU }}
+            cpu: {{ .Values.SERVICE.RESOURCES.LIMITS.CPU }}
+            {{- end }}
+            {{- if .Values.SERVICE.RESOURCES.LIMITS.MEMORY }}
+            memory: {{ .Values.SERVICE.RESOURCES.LIMITS.MEMORY }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.SERVICE.RESOURCES.LIMITS }}
+          limits:
+            {{- if .Values.SERVICE.RESOURCES.LIMITS.CPU }}
+            cpu: {{ .Values.SERVICE.RESOURCES.LIMITS.CPU }}
+            {{- end }}
+            {{- if .Values.SERVICE.RESOURCES.LIMITS.MEMORY }}
+            memory: {{ .Values.SERVICE.RESOURCES.LIMITS.MEMORY }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+        {{- if .Values.SERVICE.CONFIG.INPUT -}}
+          {{- if eq .Values.SERVICE.CONFIG.INPUT.TYPE "TCP" }}
+        livenessProbe:
+          initialDelaySeconds: 10
+          tcpSocket:
+            port: {{ .Values.SERVICE.CONFIG.INPUT.PORT }}
+          timeoutSeconds: 1
+        readinessProbe:
+          initialDelaySeconds: 5
+          tcpSocket:
+            port: {{ .Values.SERVICE.CONFIG.INPUT.PORT }}
+          timeoutSeconds: 1
+          {{- end }}
+        {{- end }}
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/logstash/config
+          readOnly: false
+        - name: pipeline
+          mountPath: /usr/share/logstash/pipeline
+          readOnly: false
+      dnsPolicy: ClusterFirst
+      {{- if .Values.SERVICE.SELECTOR }}
+      nodeSelector:
+        {{- if .Values.SERVICE.SELECTOR.NODE }}
+        node-role.kubernetes.io/worker: "{{ .Values.SERVICE.SELECTOR.NODE }}"
+        {{- end }}
+      {{- end }}
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - name: config
+        configMap:
+          name: {{ .Values.SERVICE.NAME }}-config
+          items:
+          - key: logstash.yml
+            path: logstash.yml
+      - name: pipeline
+        configMap:
+          name: {{ .Values.SERVICE.NAME }}-config
+          items:
+          - key: logstash.conf
+            path: logstash.conf
+    {{- if eq .Values.OPENSHIFT true }}
+    triggers:
+    - type: ConfigChange
+    {{- end }}
+  {{- end }}
+{{- else }}
+# Delete Deployment
+{{- end }}

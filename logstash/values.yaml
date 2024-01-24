@@ -1,0 +1,33 @@
+STATUS: present
+OPENSHIFT: false
+NAMESPACE: default
+SERVICE:
+  NAME: logstash
+  IMAGE:
+    NAME: logstash:7.16.3
+  CONFIG:
+    INPUT:
+      # TYPE: TCP
+      # PORT: 5000
+      TYPE: KAFKA
+      HOSTS: "kafka:9092"
+      GROUP_ID: logstash
+      TOPICS:
+        - NAME: filebeat-postgres
+        - NAME: filebeat-mysql
+        - NAME: filebeat-mongodb
+      PARTITION_ASSIGNMENT: round_robin
+      THREADS: 1
+      KUBERNETES_LOGS: false
+    OUTPUT:
+      TYPE: ELASTICSEARCH
+      HOSTS: '["elasticsearch:9200"]'
+      USERNAME: elastic
+      PASSWORD: 123456
+      INDEX: apps
+  RESOURCES:
+    LIMITS:
+      CPU: 1
+      MEMORY: 512Mi
+  SELECTOR:
+    NODE: ""
