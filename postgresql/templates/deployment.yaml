@@ -79,8 +79,8 @@ spec:
           timeoutSeconds: 1
         {{- if .Values.SERVICE.STORAGE }}
         volumeMounts:
-          - name: mariadb-data
-            mountPath: /var/lib/mysql/data
+          - name: postgresql-data
+            mountPath: /var/lib/pgsql/data
             readOnly: false
         {{- end }}
       dnsPolicy: ClusterFirst
@@ -94,7 +94,7 @@ spec:
       schedulerName: default-scheduler
       {{- if .Values.SERVICE.STORAGE }}
       volumes:
-        - name: mariadb-data
+        - name: postgresql-data
           persistentVolumeClaim:
             claimName: {{ .Values.SERVICE.NAME }}
       {{- end }}
