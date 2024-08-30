@@ -77,6 +77,15 @@ spec:
           tcpSocket:
             port: 8200
           timeoutSeconds: 1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
       dnsPolicy: ClusterFirst
       {{- if .Values.SERVICE.SELECTOR }}
       nodeSelector:

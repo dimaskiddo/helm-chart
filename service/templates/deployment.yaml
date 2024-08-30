@@ -96,12 +96,21 @@ spec:
           initialDelaySeconds: 5
           tcpSocket:
             port: {{ .Values.SERVICE.PORT }}
-          timeoutSeconds: 1        
+          timeoutSeconds: 1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
       dnsPolicy: ClusterFirst
       {{- if .Values.SERVICE.IMAGE }}
         {{- if .Values.SERVICE.IMAGE.SECRET }}
       imagePullSecrets:
-       - name: {{ .Values.SERVICE.IMAGE.SECRET }}
+      - name: {{ .Values.SERVICE.IMAGE.SECRET }}
         {{- end }}
       {{- end }}
       {{- if .Values.SERVICE.SELECTOR }}
